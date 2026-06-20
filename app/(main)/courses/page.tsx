@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { 
   BookOpen, Clock, GraduationCap, IndianRupee, ArrowRight, 
-  Search, Briefcase, TrendingUp, Filter
+  Search, Download 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -95,7 +94,7 @@ export default function CoursesPage() {
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-4">
-                    <Badge variant="blue" className="text-xs">{course.category}</Badge>
+                    <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">{course.category}</Badge>
                     <div className="flex items-center gap-1 text-slate-400 text-sm">
                       <Clock className="w-3.5 h-3.5" />
                       {course.duration}
@@ -106,7 +105,7 @@ export default function CoursesPage() {
                     {course.name}
                   </h3>
 
-                  <p className="text-slate-500 text-sm mb-4 line-clamp-2">
+                  <p className="text-slate-500 text-sm mb-4 line-clamp-2 h-10">
                     {course.description}
                   </p>
 
@@ -121,60 +120,26 @@ export default function CoursesPage() {
                     </div>
                   </div>
 
-                  {/* Salary Insights */}
-                  <div className="bg-slate-50 rounded-xl p-3 mb-4">
-                    <div className="text-xs text-slate-400 mb-2">Salary Insights (LPA)</div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1">
-                        <div className="text-xs text-slate-500 mb-1">Entry</div>
-                        <div className="h-6 bg-blue-100 rounded flex items-center justify-center text-xs font-medium text-blue-700">
-                          {course.salary_insights.entry}
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-xs text-slate-500 mb-1">Mid</div>
-                        <div className="h-6 bg-amber-100 rounded flex items-center justify-center text-xs font-medium text-amber-700">
-                          {course.salary_insights.mid}
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-xs text-slate-500 mb-1">Senior</div>
-                        <div className="h-6 bg-emerald-100 rounded flex items-center justify-center text-xs font-medium text-emerald-700">
-                          {course.salary_insights.senior}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Career Opportunities */}
-                  <div className="mb-4">
-                    <div className="text-xs text-slate-400 mb-2">Top Careers:</div>
-                    <div className="flex flex-wrap gap-1">
-                      {course.career_opportunities.slice(0, 3).map(career => (
-                        <span key={career} className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">
-                          {career}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Partner Colleges */}
-                  <div className="mb-4">
-                    <div className="text-xs text-slate-400 mb-2">Partner Colleges:</div>
-                    <div className="text-xs text-slate-600">
-                      {course.partner_colleges.slice(0, 2).join(", ")}
-                      {course.partner_colleges.length > 2 && ` +${course.partner_colleges.length - 2} more`}
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button size="sm" className="flex-1" onClick={() => { const el = document.getElementById("counseling-form"); el?.scrollIntoView({ behavior: "smooth" }); }}>
-                      Apply Now
-                      <ArrowRight className="w-4 h-4 ml-1" />
+                  {/* FIXED BUTTONS */}
+                  <div className="flex gap-2 mt-6">
+                    <Button 
+                      size="sm" 
+                      className="flex-1 bg-amber-500 hover:bg-amber-600" 
+                      onClick={() => window.location.href = '/#counseling-form'}
+                    >
+                      Apply Now <ArrowRight className="w-4 h-4 ml-1" />
                     </Button>
-                    <Button size="sm" variant="outline" className="flex-1">
-                      Download Brochure
-                    </Button>
+                    
+                    <a 
+                      href={`/brochure/${course.slug}`} 
+                      className="flex-1"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button size="sm" variant="outline" className="w-full">
+                        <Download className="w-4 h-4 mr-1" /> Brochure
+                      </Button>
+                    </a>
                   </div>
                 </div>
               </motion.div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link"; // IMPORTED LINK
 import { Compass, Building2, FileCheck, Briefcase, Award, Home, ArrowRight, Sparkles } from "lucide-react";
 import { SERVICES } from "@/lib/data";
 
@@ -64,10 +65,15 @@ export function ServicesSection() {
                     </li>
                   ))}
                 </ul>
-                <button className="inline-flex items-center gap-2 text-amber-600 font-medium text-sm group-hover:gap-3 transition-all">
+                
+                {/* UPDATED: Link component instead of button */}
+                <Link 
+                  href={`/services/${service.id}`} 
+                  className="inline-flex items-center gap-2 text-amber-600 font-medium text-sm group-hover:gap-3 transition-all"
+                >
                   Learn More
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </Link>
               </motion.div>
             );
           })}

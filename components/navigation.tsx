@@ -41,7 +41,8 @@ export function Navigation() {
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          // ADDED print:hidden HERE
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 print:hidden",
           isSolid
             ? "bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/50"
             : "bg-transparent"
@@ -51,11 +52,9 @@ export function Navigation() {
           <nav className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              {/* UPDATED: Increased width/height and added padding for better framing */}
               <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:shadow-amber-500/40 transition-shadow overflow-hidden p-0.5">
                 <img 
                   src="/images/logo/logo.png"
-                  /* UPDATED: Changed object-cover to object-contain and added a white background inside the padding */
                   className="w-full h-full object-contain bg-white rounded-lg"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -140,7 +139,8 @@ export function Navigation() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-white pt-20 lg:hidden"
+            // ADDED print:hidden HERE
+            className="fixed inset-0 z-40 bg-white pt-20 lg:hidden print:hidden"
           >
             <div className="container-custom py-6 flex flex-col gap-2">
               {NAV_LINKS.map((link, index) => {

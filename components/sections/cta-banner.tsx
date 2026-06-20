@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 
 export function CtaBanner() {
   return (
-    <section className="py-16 bg-white">
+    // ADDED print:hidden HERE
+    <section className="py-16 bg-white print:hidden">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

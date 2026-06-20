@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 
 export function Footer() {
   return (
-    <footer className="bg-slate-900 text-white">
+    <footer className="bg-slate-900 text-white print:hidden">
       {/* CTA Section */}
       <div className="border-b border-slate-800">
         <div className="container-custom py-16">

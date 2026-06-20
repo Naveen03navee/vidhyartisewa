@@ -78,8 +78,13 @@ export default function RootLayout({
         <Navigation />
         <main>{children}</main>
         <Footer />
-        <WhatsAppButton />
-        <CallbackRequest />
+        
+        {/* ADDED: A wrapper to hide ALL floating widgets when printing */}
+        <div className="print:hidden">
+          <WhatsAppButton />
+          <CallbackRequest />
+        </div>
+        
       </body>
     </html>
   );

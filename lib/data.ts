@@ -225,6 +225,21 @@ export const PARTNER_COLLEGES: College[] = [
     description: 'Premier business school with industry-focused curriculum and strong corporate connections.',
     website: 'https://primusbschool.com',
   },
+  {
+  id: '9',
+  name: 'Mount Carmel PU College',
+  slug: 'mount-carmel-pu',
+  location: 'Bangalore, Karnataka',
+  rating: 4.8,
+  established: 1948,
+  accreditation: 'PU Board',
+  type: 'Pre-University',
+  courses: ['PU - Science', 'PU - Commerce'],
+  facilities: ['Library', 'Labs', 'Sports', 'Counseling Cell'],
+  placement_stats: { companies: ['N/A'], average_package: 'N/A', highest_package: 'N/A', placement_rate: 'N/A' },
+  description: 'Premier PU college in Bangalore known for academic excellence and discipline.',
+  website: 'https://mountcarmelcollegeblr.co.in',
+},
 ];
 
 // COURSES - From PRD categories + real Vidhyarthi Sewa course info
@@ -489,6 +504,19 @@ export const COURSES: Course[] = [
     salary_insights: { entry: '6-10 LPA', mid: '12-20 LPA', senior: '25-50 LPA' },
     partner_colleges: ['Marwadi University', 'Bangalore Technological Institute'],
   },
+  {
+  id: '21',
+  name: 'PU - Science (PCMB)',
+  slug: 'pu-science',
+  category: 'PU (Pre-University)',
+  duration: '2 Years',
+  eligibility: '10th Pass',
+  fees_range: '₹40,000 - ₹80,000/year',
+  description: 'Pre-University course in Science stream (Physics, Chemistry, Maths, Biology) preparing students for competitive exams.',
+  career_opportunities: ['Medical Aspirant', 'Engineering Aspirant', 'Research'],
+  salary_insights: { entry: 'N/A', mid: 'N/A', senior: 'N/A' },
+  partner_colleges: ['Mount Carmel PU College'],
+},
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
@@ -749,7 +777,7 @@ export const ADMISSION_STEPS = [
 ];
 
 export const COURSE_CATEGORIES = [
-  'All', 'Engineering', 'Medical', 'Nursing', 'Allied Health Sciences', 'Pharmacy', 'Management', 'Commerce', 'Computer Applications',
+  'All', 'Engineering', 'Medical', 'Nursing', 'Allied Health Sciences', 'Pharmacy', 'Management', 'Commerce', 'Computer Applications', 'PU (Pre-University)',
 ];
 
 export const COLLEGE_CATEGORIES = [
