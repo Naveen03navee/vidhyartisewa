@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { 
   Star, Quote, Trophy, GraduationCap, Building2, 
-  TrendingUp, Award, Users, ArrowRight, User
+  TrendingUp, Award, Users, ArrowRight, User, Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TESTIMONIALS } from "@/lib/data";
 import { SuccessHero } from "@/components/sections/success-hero";
+import { createClient } from "@/lib/supabase-client";
+
+const SUPABASE_IMAGE_URL = "https://tauhscbkagspofmfbqlx.supabase.co/storage/v1/object/public/website-images";
 
 const successMetrics = [
   { icon: Users, value: "10,000+", label: "Students Placed", color: "blue" },
@@ -18,44 +20,40 @@ const successMetrics = [
   { icon: Award, value: "98%", label: "Success Rate", color: "rose" },
 ];
 
-const topCompanies = [
-  { name: "TCS", domain: "tcs.com" },
-  { name: "Infosys", domain: "infosys.com" },
-  { name: "Wipro", domain: "wipro.com" },
-  { name: "Amazon", domain: "amazon.com" },
-  { name: "Microsoft", domain: "microsoft.com" },
-  { name: "Google", domain: "google.com" },
-  { name: "Deloitte", domain: "deloitte.com" },
-  { name: "KPMG", domain: "kpmg.com" },
-  { name: "Apollo", domain: "apollohospitals.com" },
-  { name: "Fortis", domain: "fortishealthcare.com" },
-  { name: "HDFC Bank", domain: "hdfcbank.com" },
-  { name: "ICICI", domain: "icicibank.com" }
-];
-
-// SMART LOGO COMPONENT: Handles broken images beautifully
-function CompanyLogo({ company }: { company: { name: string; domain: string } }) {
-  const [imgError, setImgError] = useState(false);
-
-  return (
-    <div className="group bg-white rounded-2xl p-6 border border-slate-100 flex items-center justify-center hover:shadow-lg transition-all hover:-translate-y-1 h-24 relative overflow-hidden">
-      {!imgError ? (
-        <img 
-          src={`https://logo.clearbit.com/${company.domain}`} 
-          alt={`${company.name} Logo`}
-          className="max-w-[80%] max-h-[80%] object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300"
-          onError={() => setImgError(true)}
-        />
-      ) : (
-        <span className="font-black text-xl text-slate-800 tracking-tight group-hover:text-[#FF6138] transition-colors">
-          {company.name}
-        </span>
-      )}
-    </div>
-  );
-}
-
 export default function SuccessStoriesPage() {
+  const [stories, setStories] = useState<any[]>([]);
+  const [companies, setCompanies] = useState<any[]>([]); // Added state for recruiters
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch live stories AND companies from Supabase
+  useEffect(() => {
+    async function fetchPageData() {
+      const supabase = createClient();
+      
+      // 1. Fetch Success Stories
+      const { data: storyData, error: storyError } = await supabase
+        .from("success_stories")
+        .select("*")
+        .order("created_at", { ascending: false }); // Newest first
+      
+      if (storyError) console.error("Error fetching stories:", storyError);
+      else setStories(storyData || []);
+
+      // 2. Fetch Recruiters
+      const { data: recruiterData, error: recruiterError } = await supabase
+        .from("recruiters")
+        .select("*")
+        .order("created_at", { ascending: false });
+      
+      if (recruiterError) console.error("Error fetching recruiters:", recruiterError);
+      else setCompanies(recruiterData || []);
+
+      setIsLoading(false);
+    }
+    
+    fetchPageData();
+  }, []);
+
   return (
     <div className="pt-20">
       
@@ -86,7 +84,7 @@ export default function SuccessStoriesPage() {
         </div>
       </section>
 
-      {/* 3. Testimonials */}
+      {/* 3. Testimonials (LIVE FROM DATABASE) */}
       <section className="py-20 lg:py-28 bg-slate-50">
         <div className="container-custom">
           <motion.div
@@ -103,69 +101,99 @@ export default function SuccessStoriesPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {TESTIMONIALS.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-3xl p-8 border border-slate-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
-              >
-                <Quote className="w-10 h-10 text-amber-200 mb-6" />
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <Loader2 className="w-12 h-12 text-[#FF6138] animate-spin mb-4" />
+              <p className="text-slate-500 font-medium">Loading success stories...</p>
+            </div>
+          ) : stories.length === 0 ? (
+            <div className="text-center py-20 bg-white rounded-3xl border border-slate-100">
+              <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-slate-800">No stories found</h3>
+              <p className="text-slate-500">Check back later for new student success stories.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {stories.map((story, index) => {
+                
+                // Safely parse the placement JSON from the database
+                let parsedPlacement = null;
+                if (story.placement) {
+                  try {
+                    parsedPlacement = JSON.parse(story.placement);
+                  } catch (e) {
+                    console.error("Could not parse placement data", e);
+                  }
+                }
 
-                <div className="flex gap-1 mb-6">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-4 h-4 ${
-                        i < testimonial.rating
-                          ? "text-amber-400 fill-amber-400"
-                          : "text-slate-200"
-                      }`}
-                    />
-                  ))}
-                </div>
+                const imageSource = story.image_url || `${SUPABASE_IMAGE_URL}/testimonials/${story.id}.jpg`;
+                const rating = parseInt(story.rating) || 5; // Fallback to 5 stars if empty
 
-                <p className="text-slate-600 leading-relaxed mb-8 flex-1 italic">
-                  "{testimonial.text}"
-                </p>
+                return (
+                  <motion.div
+                    key={story.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-white rounded-3xl p-8 border border-slate-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
+                  >
+                    <Quote className="w-10 h-10 text-amber-200 mb-6" />
 
-                <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
-                  <div className="w-14 h-14 rounded-full bg-slate-100 overflow-hidden relative shrink-0 border-2 border-white shadow-sm">
-                    <img 
-                      src={`/images/testimonials/${testimonial.id}.jpg`} 
-                      alt={testimonial.name}
-                      className="w-full h-full object-cover relative z-10"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                        target.parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
-                      }}
-                    />
-                    <User className="w-6 h-6 text-slate-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fallback-icon hidden" />
-                  </div>
-
-                  <div>
-                    <div className="font-bold text-slate-900">{testimonial.name}</div>
-                    <div className="text-sm font-medium text-slate-500">
-                      {testimonial.course} • {testimonial.college}
+                    <div className="flex gap-1 mb-6">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i < rating
+                              ? "text-amber-400 fill-amber-400"
+                              : "text-slate-200"
+                          }`}
+                        />
+                      ))}
                     </div>
-                  </div>
-                </div>
 
-                {testimonial.placement && (
-                  <div className="mt-6 flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-100/50">
-                    <Trophy className="w-5 h-5 text-emerald-500 shrink-0" />
-                    <span className="text-sm font-medium text-emerald-800">
-                      Placed at <strong className="font-black text-emerald-900">{testimonial.placement.company}</strong> — {testimonial.placement.package}
-                    </span>
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
+                    <p className="text-slate-600 leading-relaxed mb-8 flex-1 italic">
+                      "{story.text}"
+                    </p>
+
+                    <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
+                      <div className="w-14 h-14 rounded-full bg-slate-100 overflow-hidden relative shrink-0 border-2 border-white shadow-sm">
+                        <img 
+                          src={imageSource} 
+                          alt={story.name}
+                          className="w-full h-full object-cover relative z-10"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            target.parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
+                          }}
+                        />
+                        <User className="w-6 h-6 text-slate-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fallback-icon hidden" />
+                      </div>
+
+                      <div>
+                        <div className="font-bold text-slate-900">{story.name}</div>
+                        <div className="text-sm font-medium text-slate-500">
+                          {story.course} • {story.college}
+                        </div>
+                      </div>
+                    </div>
+
+                    {parsedPlacement && parsedPlacement.company && (
+                      <div className="mt-6 flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-100/50">
+                        <Trophy className="w-5 h-5 text-emerald-500 shrink-0" />
+                        <span className="text-sm font-medium text-emerald-800">
+                          Placed at <strong className="font-black text-emerald-900">{parsedPlacement.company}</strong> 
+                          {parsedPlacement.package && ` — ${parsedPlacement.package}`}
+                        </span>
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -210,7 +238,7 @@ export default function SuccessStoriesPage() {
         </div>
       </section>
 
-      {/* 5. Top Recruiters (SMART AUTO-FETCHING LOGOS) */}
+      {/* 5. Top Recruiters (DYNAMIC FROM DATABASE) */}
       <section className="py-20 lg:py-28 bg-slate-50 border-t border-slate-100">
         <div className="container-custom">
           <motion.div
@@ -227,20 +255,36 @@ export default function SuccessStoriesPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {topCompanies.map((company, index) => (
-              <motion.div
-                key={company.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
-              >
-                {/* Uses our new smart logo component! */}
-                <CompanyLogo company={company} />
-              </motion.div>
-            ))}
-          </div>
+          {companies.length === 0 && !isLoading ? (
+            <div className="text-center py-10">
+              <p className="text-slate-500">No recruiters found.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+              {companies.map((company, index) => (
+                <motion.div
+                  key={company.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                  className="group bg-white rounded-2xl p-6 border border-slate-100 flex items-center justify-center hover:shadow-lg transition-all hover:-translate-y-1 h-24 relative overflow-hidden"
+                >
+                  <img 
+                    src={company.image_url} 
+                    alt={`${company.name} Logo`}
+                    className="max-w-[80%] max-h-[80%] object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      // Fallback text if the database image is broken
+                      target.parentElement!.innerHTML = `<span class="font-black text-xl text-slate-800 tracking-tight group-hover:text-[#FF6138] transition-colors">${company.name}</span>`;
+                    }}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

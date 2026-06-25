@@ -1,50 +1,73 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
+  // Create an unmodified response
+  let supabaseResponse = NextResponse.next({
+    request,
   })
 
+  // Create the server-side Supabase client
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value
+        getAll() {
+          return request.cookies.getAll()
         },
-        set(name: string, value: string, options: CookieOptions) {
-          // If the cookie is updated, update the request and response objects
-          request.cookies.set({ name, value, ...options })
-          response = NextResponse.next({
-            request: { headers: request.headers },
+        // Add the type definition right here:
+        setAll(cookiesToSet: { name: string; value: string; options: any }[]) {
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({
+            request,
           })
-          response.cookies.set({ name, value, ...options })
-        },
-        remove(name: string, options: CookieOptions) {
-          // If the cookie is removed, update the request and response objects
-          request.cookies.set({ name, value: '', ...options })
-          response = NextResponse.next({
-            request: { headers: request.headers },
-          })
-          response.cookies.set({ name, value: '', ...options })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
         },
       },
-    }
+    } // <-- Removed extra brace, and added the closing parenthesis on the next line
   )
 
-  // This safely refreshes the session if it's expired
-  await supabase.auth.getUser()
+  // IMPORTANT: This refreshes the session and gets the user
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  return response
+  // Protect the /admin routes
+  const isTargetingAdminRoute = request.nextUrl.pathname.startsWith('/admin')
+  const isTargetingLoginRoute = request.nextUrl.pathname.startsWith('/admin/login')
+
+  if (isTargetingAdminRoute && !isTargetingLoginRoute) {
+    // If the user is NOT logged in, redirect them to the login page
+    if (!user) {
+      const loginUrl = request.nextUrl.clone()
+      loginUrl.pathname = '/admin/login'
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
+  // If the user IS logged in and tries to go to the login page, redirect them to the dashboard
+  if (user && isTargetingLoginRoute) {
+    const dashboardUrl = request.nextUrl.clone()
+    dashboardUrl.pathname = '/admin/dashboard'
+    return NextResponse.redirect(dashboardUrl)
+  }
+
+  return supabaseResponse
 }
 
-// Tell Next.js to run this middleware on all routes EXCEPT static files/images
+// Specify exactly which routes the middleware should run on
 export const config = {
   matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public files (e.g. .svg, .png, .jpg)
+     */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

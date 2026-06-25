@@ -197,11 +197,15 @@ export default function CareerGuidancePage() {
   return (
     <div className="pt-20">
       
-      {/* 1. MODERN HERO SECTION */}
-      <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 bg-[#FCF8F3] overflow-hidden">
-        {/* Giant Background Text */}
+      {/* 1. MODERN HERO SECTION - Updated to deep blue theme */}
+      <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 bg-[#3a506b] overflow-hidden">
+        
+        {/* Deep steel blue gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2c4159]/95 via-[#466282]/85 to-[#3a506b]/95 z-0 pointer-events-none" />
+
+        {/* Giant Background Text - Toned down for dark mode */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center z-0 pointer-events-none select-none overflow-hidden">
-          <h1 className="text-[clamp(4rem,16vw,12rem)] font-black text-[#EADBCC] leading-none tracking-tighter whitespace-nowrap opacity-60">
+          <h1 className="text-[clamp(4rem,16vw,12rem)] font-black text-white/5 leading-none tracking-tighter whitespace-nowrap">
             Unsure?
           </h1>
         </div>
@@ -213,22 +217,25 @@ export default function CareerGuidancePage() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="max-w-3xl mx-auto text-center"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md text-amber-600 font-medium mb-6 shadow-sm border border-white">
+            {/* Top Badge - Updated to transparent glass with gold text */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-[#FDB813] font-bold mb-6 shadow-sm border border-white/20">
               <Sparkles className="w-4 h-4" />
               Smart Career Guidance
             </div>
             
-            <h2 className="text-4xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight">
+            {/* Headings - Updated text colors */}
+            <h2 className="text-4xl lg:text-6xl font-black text-white mb-6 tracking-tight">
               Find Your Perfect Path
             </h2>
             
-            <p className="text-lg lg:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto mb-10">
+            <p className="text-lg lg:text-xl text-slate-200 leading-relaxed max-w-2xl mx-auto mb-10 font-medium">
               Take our interactive assessment, explore 'day in the life' previews, and calculate your ROI to make a confident career choice.
             </p>
 
+            {/* Button - Updated to solid gold */}
             <Button 
               size="lg" 
-              className="rounded-full bg-[#FF6138] hover:bg-[#E5502B] text-white px-8 h-14 text-lg font-bold shadow-[0_15px_30px_-10px_rgba(255,97,56,0.5)] transition-all hover:scale-105"
+              className="rounded-full bg-[#FDB813] hover:bg-[#E5A300] text-slate-900 px-8 h-14 text-lg font-bold shadow-[0_15px_30px_-10px_rgba(253,184,19,0.5)] transition-all hover:scale-105"
               onClick={() => {
                 setAssessmentStarted(true);
                 setTimeout(() => {
@@ -317,12 +324,16 @@ export default function CareerGuidancePage() {
                         </motion.div>
                       </AnimatePresence>
 
-                      {/* Navigation */}
+                      {/* Navigation - Button color updated to gold theme */}
                       <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-100">
                         <Button variant="outline" onClick={handlePrev} disabled={currentQuestion === 0}>
                           <ChevronLeft className="w-4 h-4 mr-2" /> Previous
                         </Button>
-                        <Button onClick={handleNext} disabled={!answers[currentQ.id] || isCalculating} className="bg-[#FF6138] hover:bg-[#E5502B]">
+                        <Button 
+                          onClick={handleNext} 
+                          disabled={!answers[currentQ.id] || isCalculating} 
+                          className="bg-[#FDB813] hover:bg-[#E5A300] text-slate-900 font-bold"
+                        >
                           {isCalculating ? (
                             <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Analyzing...</>
                           ) : currentQuestion === ASSESSMENT_QUESTIONS.length - 1 ? (
@@ -340,7 +351,8 @@ export default function CareerGuidancePage() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 lg:p-12 text-center relative overflow-hidden"
                   >
-                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 to-[#FF6138]" />
+                    {/* Gradient updated to match gold theme */}
+                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 to-[#FDB813]" />
                     <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center mx-auto mb-6">
                       <Lightbulb className="w-10 h-10 text-amber-600" />
                     </div>
@@ -360,26 +372,27 @@ export default function CareerGuidancePage() {
                       ))}
                     </div>
 
+                    {/* Button colors updated to gold theme */}
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
-  <Button 
-    size="lg" 
-    className="bg-[#FF6138] hover:bg-[#E5502B] rounded-full" 
-    onClick={() => {
-      // Navigate to the home page and anchor to the form
-      router.push("/#counseling-form"); 
-    }}
-  >
-    Book Free Strategy Call
-  </Button>
-  <Button 
-    variant="outline" 
-    size="lg" 
-    className="rounded-full" 
-    onClick={resetAssessment}
-  >
-    Retake Assessment
-  </Button>
-</div>
+                      <Button 
+                        size="lg" 
+                        className="bg-[#FDB813] hover:bg-[#E5A300] text-slate-900 font-bold rounded-full" 
+                        onClick={() => {
+                          // Navigate to the home page and anchor to the form
+                          router.push("/#counseling-form"); 
+                        }}
+                      >
+                        Book Free Strategy Call
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="lg" 
+                        className="rounded-full" 
+                        onClick={resetAssessment}
+                      >
+                        Retake Assessment
+                      </Button>
+                    </div>
                   </motion.div>
                 )}
               </div>
@@ -406,8 +419,9 @@ export default function CareerGuidancePage() {
                   <button
                     key={career.id}
                     onClick={() => setActiveDay(career.id)}
+                    // Active border updated to gold
                     className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 text-left ${
-                      isActive ? "bg-white shadow-lg border-l-4 border-[#FF6138]" : "hover:bg-slate-100 border-l-4 border-transparent"
+                      isActive ? "bg-white shadow-lg border-l-4 border-[#FDB813]" : "hover:bg-slate-100 border-l-4 border-transparent"
                     }`}
                   >
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${isActive ? `bg-${career.color}-100 text-${career.color}-600` : 'bg-slate-200 text-slate-500'}`}>
@@ -526,21 +540,24 @@ export default function CareerGuidancePage() {
       </section>
 
       {/* 5. COURSE-TO-COLLEGE MATCHER */}
-      <section className="py-20 lg:py-28 bg-[#FCF8F3]">
+      {/* Background color neutralized to fit new theme gracefully */}
+      <section className="py-20 lg:py-28 bg-slate-50">
         <div className="container-custom">
           <div className="max-w-6xl mx-auto bg-white rounded-3xl p-8 lg:p-12 shadow-xl border border-white/60">
             
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-10 gap-6 border-b border-slate-100 pb-8">
               <div>
                 <h2 className="text-3xl font-bold text-slate-900 mb-2 flex items-center gap-3">
-                  <Filter className="text-[#FF6138] w-8 h-8" /> Smart College Matcher
+                  {/* Icon updated to gold */}
+                  <Filter className="text-[#FDB813] w-8 h-8" /> Smart College Matcher
                 </h2>
                 <p className="text-slate-500">Filter through our partner colleges to find your perfect match.</p>
               </div>
               
               <div className="flex flex-wrap gap-4 w-full lg:w-auto">
                 <select 
-                  className="flex-1 lg:w-48 h-12 rounded-xl border border-slate-200 px-4 bg-slate-50 font-medium text-slate-700 outline-none focus:border-[#FF6138]"
+                  // Focus ring updated to gold
+                  className="flex-1 lg:w-48 h-12 rounded-xl border border-slate-200 px-4 bg-slate-50 font-medium text-slate-700 outline-none focus:border-[#FDB813]"
                   value={filterStream}
                   onChange={(e) => setFilterStream(e.target.value)}
                 >
@@ -551,7 +568,8 @@ export default function CareerGuidancePage() {
                 </select>
                 
                 <select 
-                  className="flex-1 lg:w-48 h-12 rounded-xl border border-slate-200 px-4 bg-slate-50 font-medium text-slate-700 outline-none focus:border-[#FF6138]"
+                  // Focus ring updated to gold
+                  className="flex-1 lg:w-48 h-12 rounded-xl border border-slate-200 px-4 bg-slate-50 font-medium text-slate-700 outline-none focus:border-[#FDB813]"
                   value={filterLocation}
                   onChange={(e) => setFilterLocation(e.target.value)}
                 >
@@ -612,10 +630,12 @@ export default function CareerGuidancePage() {
               viewport={{ once: true }}
               className="bg-slate-900 rounded-3xl p-8 lg:p-10 text-white relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF6138]/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              {/* Blur accent updated to gold */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#FDB813]/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
               
               <h3 className="text-2xl font-bold mb-2 flex items-center gap-3 relative z-10">
-                <Calculator className="text-[#FF6138]" /> Education ROI Calculator
+                {/* Icon updated to gold */}
+                <Calculator className="text-[#FDB813]" /> Education ROI Calculator
               </h3>
               <p className="text-slate-400 mb-8 relative z-10 text-sm">See how long it takes to recover your investment based on entry-level salaries.</p>
               
@@ -628,7 +648,8 @@ export default function CareerGuidancePage() {
                   <input 
                     type="range" min="2" max="50" step="1" 
                     value={roiFee} onChange={(e) => setRoiFee(Number(e.target.value))}
-                    className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#FF6138]"
+                    // Slider accent updated to gold
+                    className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#FDB813]"
                   />
                 </div>
                 
@@ -640,13 +661,15 @@ export default function CareerGuidancePage() {
                   <input 
                     type="range" min="3" max="25" step="1" 
                     value={roiSalary} onChange={(e) => setRoiSalary(Number(e.target.value))}
-                    className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#FF6138]"
+                    // Slider accent updated to gold
+                    className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#FDB813]"
                   />
                 </div>
 
                 <div className="mt-8 p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-center">
                   <div className="text-sm text-slate-300 mb-1">Estimated Payback Period</div>
-                  <div className="text-4xl font-black text-[#FF6138]">{paybackYears} Years</div>
+                  {/* Results text updated to gold */}
+                  <div className="text-4xl font-black text-[#FDB813]">{paybackYears} Years</div>
                   <div className="text-xs text-slate-400 mt-2">*Assuming 40% of salary is saved for repayment</div>
                 </div>
               </div>

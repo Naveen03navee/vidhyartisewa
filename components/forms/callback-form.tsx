@@ -117,10 +117,28 @@ export function CallbackRequest() {
               {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
             </div>
             <div>
-              <Label htmlFor="callback-phone">Phone Number</Label>
-              <Input id="callback-phone" {...register("phone")} placeholder="10-digit number" className="mt-1" />
-              {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
-            </div>
+  <Label htmlFor="callback-phone">Phone Number</Label>
+  <Input 
+    id="callback-phone" 
+    type="tel"           // Triggers the phone keyboard on mobile
+    inputMode="numeric"  // Ensures mobile keyboards show numbers by default
+    maxLength={10}       // Hard limit: strictly 10 characters max
+    placeholder="10-digit number" 
+    className="mt-1"
+    
+    // We separate 'onChange' from the rest of the register props
+    {...{ ...register("phone"), onChange: undefined }} 
+    
+    onChange={(e) => {
+      // 1. Strip out any character that is NOT a number (0-9) instantly
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+      
+      // 2. Pass the clean, numbers-only value back to react-hook-form
+      register("phone").onChange(e); 
+    }}
+  />
+  {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
+</div>
             <div>
               <Label htmlFor="callback-time">Best Time to Call</Label>
               <select 

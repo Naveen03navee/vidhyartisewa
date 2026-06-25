@@ -1,22 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
-  BookOpen, Clock, GraduationCap, IndianRupee, ArrowRight, 
+  Clock, GraduationCap, IndianRupee, ArrowRight, 
   Search, Download 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { COURSES, COURSE_CATEGORIES } from "@/lib/data";
+import { createClient } from "@/lib/supabase-client"; // Ensure this path is correct
 import { CoursesHero } from "@/components/sections/courses-hero";
 
 export default function CoursesPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
+  const [courses, setCourses] = useState<any[]>([]); // New state for DB data
+  const [categories, setCategories] = useState<string[]>(["All"]); // Dynamic categories
+  
+  const supabase = createClient();
 
-  const filteredCourses = COURSES.filter(course => {
+  useEffect(() => {
+    async function fetchData() {
+      const { data } = await supabase.from("courses").select("*");
+      if (data) {
+        setCourses(data);
+        // Create unique list of categories from the fetched data
+        const uniqueCats = ["All", ...Array.from(new Set(data.map(c => c.category)))];
+        setCategories(uniqueCats);
+      }
+    }
+    fetchData();
+  }, [supabase]);
+
+  // Filters posts by category and active search query
+  const filteredCourses = courses.filter(course => {
     const matchesCategory = activeCategory === "All" || course.category === activeCategory;
     const matchesSearch = course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.category.toLowerCase().includes(searchQuery.toLowerCase());
@@ -29,24 +46,20 @@ export default function CoursesPage() {
       {/* 1. HERO COMPONENT */}
       <CoursesHero 
         searchQuery={searchQuery} 
-        setSearchQuery={(val) => {
-          setSearchQuery(val);
-          setIsSearching(val.length > 0);
-        }} 
+        setSearchQuery={setSearchQuery} 
       />
 
-      {/* 2. Sticky Category Filter - ONLY VISIBLE WHEN SEARCH IS EMPTY */}
+      {/* 2. Sticky Category Filter */}
       {searchQuery === "" && (
         <section className="py-4 bg-white border-b border-slate-100 sticky top-16 z-30 shadow-sm transition-all">
           <div className="container-custom">
             <div className="flex justify-center overflow-x-auto w-full pb-2 lg:pb-0 hide-scrollbar">
               <div className="flex gap-2">
-                {COURSE_CATEGORIES.map(cat => (
+                {categories.map(cat => (
                   <button
                     key={cat}
                     onClick={() => {
                       setActiveCategory(cat);
-                      // Smooth scroll to grid
                       const grid = document.getElementById("courses-grid");
                       if (grid) {
                         const y = grid.getBoundingClientRect().top + window.scrollY - 100;
@@ -81,7 +94,6 @@ export default function CoursesPage() {
                 className="bg-white rounded-3xl border border-slate-100 overflow-hidden hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-300 hover:-translate-y-2 group flex flex-col"
               >
                 <div className="p-8 flex-1 flex flex-col">
-                  
                   <div className="flex items-start justify-between mb-6">
                     <Badge variant="secondary" className="text-xs bg-orange-50 text-orange-700 font-bold px-3 py-1">
                       {course.category}
@@ -142,11 +154,7 @@ export default function CoursesPage() {
 
           {filteredCourses.length === 0 && (
             <div className="text-center py-32">
-              <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Search className="w-10 h-10 text-slate-400" />
-              </div>
               <h3 className="text-2xl font-black text-slate-900 mb-2">No courses found</h3>
-              <p className="text-slate-500 text-lg">We could not find a course matching "{searchQuery}". Try a different keyword.</p>
             </div>
           )}
         </div>

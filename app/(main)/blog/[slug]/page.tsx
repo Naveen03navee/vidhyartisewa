@@ -8,6 +8,9 @@ import { BLOG_POSTS } from "@/lib/data";
 // Import the safe client-side image fallback component
 import { BlogFeaturedImage } from "@/components/ui/blog-image";
 
+// 1. ADD SUPABASE BASE URL
+const SUPABASE_IMAGE_URL = "https://tauhscbkagspofmfbqlx.supabase.co/storage/v1/object/public/website-images";
+
 // Generates all static paths at build time for the 'output: export' configuration
 export function generateStaticParams() {
   return BLOG_POSTS.map((post) => ({
@@ -23,6 +26,9 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   if (!post) {
     notFound();
   }
+
+  // 2. CONSTRUCT THE HYBRID IMAGE SOURCE
+  const imageSource = (post as any).image_url || `${SUPABASE_IMAGE_URL}/blogs/${post.slug}.jpg`;
 
   return (
     <div className="pt-20 pb-20 bg-slate-50 min-h-screen">
@@ -78,15 +84,15 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         <div className="container-custom">
           <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden p-6 sm:p-8 lg:p-14">
             
-            {/* Featured Photo Section with Client Fallback Handling */}
-            <BlogFeaturedImage src={`/images/blog/${post.slug}.jpg`} alt={post.title} />
+            {/* 3. Featured Photo Section (Updated to use Supabase source) */}
+            <BlogFeaturedImage src={imageSource} alt={post.title} />
 
             {/* Lead Excerpt */}
             <p className="text-xl lg:text-2xl text-slate-600 font-medium leading-relaxed mb-10 pb-10 border-b border-slate-100 italic">
               "{post.excerpt}"
             </p>
 
-            {/* Main Content (Safely parses the rich content, lists, and tables out of data.ts) */}
+            {/* Main Content */}
             <div 
               className="prose prose-lg prose-slate max-w-none text-slate-700 leading-loose"
               dangerouslySetInnerHTML={{ __html: post.content }}
@@ -124,7 +130,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       <section className="mt-20">
         <div className="container-custom">
           <div className="bg-gradient-to-r from-amber-500 to-[#FF6138] rounded-3xl p-8 lg:p-10 text-center relative overflow-hidden shadow-xl">
-            <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-10 mix-blend-overlay" />
+            <div className="absolute inset-0 bg-white/5 mix-blend-overlay pointer-events-none" />
             <div className="relative z-10 max-w-2xl mx-auto">
               <h3 className="text-2xl lg:text-3xl font-black text-white mb-4">Need personalized guidance?</h3>
               <p className="text-white/90 mb-8 text-lg">

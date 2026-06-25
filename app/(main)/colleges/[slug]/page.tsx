@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PARTNER_COLLEGES } from "@/lib/data";
 
+const SUPABASE_IMAGE_URL = "https://tauhscbkagspofmfbqlx.supabase.co/storage/v1/object/public/website-images";
+
 export function generateStaticParams() {
   return PARTNER_COLLEGES.map((college) => ({
     slug: college.slug,
@@ -18,6 +20,9 @@ export default function CollegeDetailPage({ params }: { params: { slug: string }
     notFound();
   }
 
+  // Uses database URL if it exists (for new admin uploads), or builds it dynamically for existing ones
+  const imageSource = (college as any).image_url || `${SUPABASE_IMAGE_URL}/colleges/${college.slug}.jpg`;
+
   return (
     <div className="pt-24 pb-20 container-custom min-h-screen">
       {/* Back Button */}
@@ -28,10 +33,10 @@ export default function CollegeDetailPage({ params }: { params: { slug: string }
       {/* Main Header Section */}
       <div className="bg-white rounded-3xl p-8 md:p-12 border border-slate-100 shadow-sm mb-8 flex flex-col md:flex-row gap-8 items-start">
         
-        {/* Logo (Cleaned up for Server Component compatibility) */}
+        {/* Logo (Now fetching from Supabase Storage) */}
         <div className="w-32 h-32 shrink-0 rounded-2xl bg-white border border-slate-100 shadow-md flex items-center justify-center p-2 overflow-hidden">
           <img 
-            src={`/images/colleges/${college.slug}.jpg`} 
+            src={imageSource} 
             alt={college.name}
             className="w-full h-full object-contain"
           />

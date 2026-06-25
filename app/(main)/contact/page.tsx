@@ -49,8 +49,12 @@ export default function ContactPage() {
   return (
     <div className="pt-20">
       
-      {/* --- NEW MODERN HERO SECTION --- */}
-      <section className="relative pt-20 lg:pt-32 pb-20 lg:pb-32 bg-[#FFFAF5] overflow-hidden">
+      {/* --- NEW MODERN HERO SECTION (Updated to Deep Blue Theme) --- */}
+      <section className="relative pt-20 lg:pt-32 pb-20 lg:pb-32 bg-[#3a506b] overflow-hidden">
+        
+        {/* Deep steel blue gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2c4159]/95 via-[#466282]/85 to-[#3a506b]/95 z-0 pointer-events-none" />
+
         <div className="container-custom relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             
@@ -59,40 +63,44 @@ export default function ContactPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 text-amber-700 font-bold mb-6">
+              {/* Badge updated to transparent glass with gold text */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[#FDB813] font-bold mb-6 shadow-sm">
                 <MessageCircle className="w-4 h-4" />
                 We are 24/7 available
               </div>
-              <h1 className="text-5xl lg:text-7xl font-black text-slate-900 mb-6 leading-[1.1]">
+              
+              {/* Headings updated to white and solid gold */}
+              <h1 className="text-5xl lg:text-7xl font-black text-white mb-6 leading-[1.1]">
                 Let's plan your <br/>
-                <span className="text-amber-500">next big step.</span>
+                <span className="text-[#FDB813]">next big step.</span>
               </h1>
-              <p className="text-xl text-slate-600 leading-relaxed mb-8 max-w-lg">
+              <p className="text-xl text-slate-200 leading-relaxed mb-8 max-w-lg font-medium">
                 Whether you need urgent admission assistance or just want to chat about career options, our expert counselors are ready to help.
               </p>
             </motion.div>
 
-            {/* Modern Abstract Contact Visual */}
+            {/* Modern Abstract Contact Visual - Updated to Dark Glassmorphism */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, type: "spring" }}
               className="relative hidden lg:block"
             >
-              <div className="w-[400px] h-[400px] bg-amber-400 rounded-full blur-3xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20" />
+              {/* Glow updated to gold */}
+              <div className="w-[400px] h-[400px] bg-[#FDB813] rounded-full blur-3xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20" />
               
               <div className="relative grid grid-cols-2 gap-4">
-                <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4 }} className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 flex flex-col items-center justify-center text-center gap-4 translate-y-8">
-                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600"><Phone className="w-8 h-8" /></div>
-                  <div className="font-bold text-slate-900">Instant Call</div>
+                <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4 }} className="bg-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-xl border border-white/20 flex flex-col items-center justify-center text-center gap-4 translate-y-8">
+                  <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-300"><Phone className="w-8 h-8" /></div>
+                  <div className="font-bold text-white">Instant Call</div>
                 </motion.div>
-                <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 5 }} className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 flex flex-col items-center justify-center text-center gap-4">
-                  <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600"><MessageCircle className="w-8 h-8" /></div>
-                  <div className="font-bold text-slate-900">WhatsApp</div>
+                <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 5 }} className="bg-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-xl border border-white/20 flex flex-col items-center justify-center text-center gap-4">
+                  <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-300"><MessageCircle className="w-8 h-8" /></div>
+                  <div className="font-bold text-white">WhatsApp</div>
                 </motion.div>
-                <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 4.5 }} className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 flex flex-col items-center justify-center text-center gap-4 col-span-2 mx-12">
-                  <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600"><MapPin className="w-8 h-8" /></div>
-                  <div className="font-bold text-slate-900">Bangalore HQ</div>
+                <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 4.5 }} className="bg-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-xl border border-white/20 flex flex-col items-center justify-center text-center gap-4 col-span-2 mx-12">
+                  <div className="w-16 h-16 bg-[#FDB813]/20 rounded-2xl flex items-center justify-center text-[#FDB813]"><MapPin className="w-8 h-8" /></div>
+                  <div className="font-bold text-white">Bangalore HQ</div>
                 </motion.div>
               </div>
             </motion.div>
@@ -101,7 +109,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Contact Info Cards */}
+      {/* Contact Info Cards (Left Light & Clean) */}
       <section className="py-16 bg-white">
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -164,7 +172,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Contact Form & Map */}
+      {/* Contact Form & Map (Left Light & Clean) */}
       <section className="py-20 lg:py-28 bg-slate-50">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -231,7 +239,8 @@ export default function ContactPage() {
                       className="mt-2 min-h-[120px]"
                     />
                   </div>
-                  <Button type="submit" size="lg" className="w-full pulse-glow" disabled={isSubmitting}>
+                  {/* Submit Button updated to Solid Gold */}
+                  <Button type="submit" size="lg" className="w-full bg-[#FDB813] hover:bg-[#E5A300] text-slate-900 font-bold transition-all hover:scale-[1.02] shadow-md" disabled={isSubmitting}>
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-5 h-5 mr-2 animate-spin" />
@@ -308,9 +317,12 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900">
-        <div className="container-custom text-center">
+      {/* CTA - Updated to match deep steel-blue theme */}
+      <section className="relative py-16 bg-[#3a506b] overflow-hidden">
+        {/* Steel blue gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#2c4159] via-[#3a506b] to-[#2c4159] z-0" />
+        
+        <div className="container-custom text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -319,14 +331,14 @@ export default function ContactPage() {
             <h2 className="text-3xl font-bold text-white mb-4">
               Visit Our Office
             </h2>
-            <p className="text-white/70 max-w-xl mx-auto mb-8">
+            <p className="text-white/80 max-w-xl mx-auto mb-8 font-medium">
               We welcome you to visit our office for a face-to-face counseling session. 
               Walk-ins are welcome during working hours.
             </p>
+            {/* Button updated to Solid Gold */}
             <Button
               size="lg"
-              variant="glass"
-              className="text-lg"
+              className="bg-[#FDB813] hover:bg-[#E5A300] text-slate-900 font-bold text-lg rounded-full px-8 shadow-lg"
               onClick={() => {
                 window.open("https://maps.app.goo.gl/336bVd2Ss2WKfvWv9", "_blank");
               }}
