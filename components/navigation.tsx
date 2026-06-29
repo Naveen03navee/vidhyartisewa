@@ -31,8 +31,8 @@ export function Navigation() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  // Determine if nav should be solid (always solid on non-home pages, or when scrolled on home)
-  const isSolid = !isHomePage || isScrolled;
+  // Determine if nav should be solid (always solid white background)
+  const isSolid = true;
 
   return (
     <>
@@ -42,7 +42,7 @@ export function Navigation() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={cn(
           // ADDED print:hidden HERE
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 print:hidden",
+          "fixed top-0 left-0 right-0 z-50 transition-colors transition-shadow duration-300 print:hidden",
           isSolid
             ? "bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/50"
             : "bg-transparent"
@@ -52,21 +52,24 @@ export function Navigation() {
           <nav className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-xl bg-white flex items-center justify-center shadow-sm overflow-hidden">
-  <img
-    src="/images/logo/logo.png"
-    alt="Vidhyarthi Sewa Logo"
-    className="w-full h-full object-contain"
-    onError={(e) => {
-      const target = e.target as HTMLImageElement;
-      target.style.display = "none";
-      target.parentElement
-        ?.querySelector(".fallback-icon")
-        ?.classList.remove("hidden");
-    }}
-  />
-  <GraduationCap className="w-8 h-8 text-amber-600 fallback-icon hidden" />
-</div>
+              <div className="w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center transition-all duration-300">
+                <img 
+                  src="/images/logo/logo.png"
+                  className={cn(
+                    "w-full h-full object-contain transition-all duration-300 group-hover:scale-105",
+                    isSolid 
+                      ? "filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.08)]" 
+                      : "filter drop-shadow-[0_0_8px_rgba(255,255,255,0.9)] brightness-110"
+                  )}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    target.parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
+                  }}
+                  alt="Vidhyarthi Sewa Logo"
+                />
+                <GraduationCap className={cn("w-6 h-6 fallback-icon hidden", isSolid ? "text-amber-500" : "text-white")} />
+              </div>
             </Link>
 
             {/* Desktop Navigation */}

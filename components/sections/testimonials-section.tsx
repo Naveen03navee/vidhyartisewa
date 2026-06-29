@@ -4,6 +4,15 @@ import { motion } from "framer-motion";
 import { Star, Quote, MessageSquare } from "lucide-react";
 import { TESTIMONIALS } from "@/lib/data";
 
+const AVATARS: Record<string, string> = {
+  "1": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=120", // Rahul
+  "2": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120", // Priya
+  "3": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120", // Amit
+  "4": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120", // Sneha
+  "5": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120", // Vikram
+  "6": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120", // Ananya
+};
+
 export function TestimonialsSection() {
   return (
     <section className="py-20 lg:py-28 bg-slate-50">
@@ -62,7 +71,7 @@ export function TestimonialsSection() {
               <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center text-amber-700 font-bold text-lg overflow-hidden">
                   <img 
-                    src={`/images/testimonials/${testimonial.id}.jpg`}
+                    src={AVATARS[testimonial.id] || `/images/testimonials/${testimonial.id}.jpg`}
                     alt={testimonial.name}
                     className="w-full h-full object-cover"
                     onError={(e) => {

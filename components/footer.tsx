@@ -67,15 +67,33 @@ export function Footer() {
           
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center overflow-hidden">
-                <img src="/images/logo/logo-white.png" alt="Vidhyarthi Sewa" className="w-full h-full object-cover" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-white">Vidhyarthi Sewa</span>
-                <span className="text-[10px] font-medium tracking-widest uppercase text-slate-400 -mt-1">Career & Admissions</span>
-              </div>
-            </Link>
+
+            <Link href="/" className="flex items-center gap-2 mb-6 group">
+  <div className="w-16 h-16 flex items-center justify-center overflow-hidden transition-all duration-300">
+    <img
+      src="/images/logo/logo-white.png"
+      alt="Vidhyarthi Sewa"
+      className="w-full h-full object-contain filter drop-shadow-[0_0_6px_rgba(255,255,255,0.9)] brightness-110 group-hover:scale-105 transition-all duration-300"
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        target.style.display = "none";
+        target.parentElement
+          ?.querySelector(".fallback-icon")
+          ?.classList.remove("hidden");
+      }}
+    />
+    <GraduationCap className="w-6 h-6 text-white fallback-icon hidden" />
+  </div>
+
+  <div className="flex flex-col">
+    <span className="text-xl font-bold text-white">
+      Vidhyarthi Sewa
+    </span>
+    <span className="text-[10px] font-medium tracking-widest uppercase text-slate-400 -mt-1">
+      Career & Admissions
+    </span>
+  </div>
+</Link>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
               Vidhyarthi Sewa is Karnataka's most trusted educational consultancy, helping students discover careers, choose the right colleges, and secure admissions since 2009.
             </p>
